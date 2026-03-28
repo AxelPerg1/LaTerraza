@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Login - La Terraza</title>
+
+<style>
+body{
+  margin:0;
+  background:#0f0f0f;
+  color:white;
+  font-family:sans-serif;
+}
+
+.container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.form-box{
+  background:#1a1a1a;
+  padding:30px;
+  border-radius:10px;
+  width:300px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  background:#111;
+  border:none;
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  background:white;
+  color:black;
+  border:none;
+  cursor:pointer;
+}
+
+.toggle{
+  text-align:center;
+  margin-top:10px;
+  cursor:pointer;
+  color:#aaa;
+}
+
+.hidden{
+  display:none;
+}
+
+a{
+  position:absolute;
+  top:20px;
+  left:20px;
+  color:white;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="index.html">⬅ Volver</a>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div class="form-box" id="loginBox">
+    <h2>Iniciar Sesión</h2>
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPass" placeholder="Contraseña">
+    <button onclick="login()">Entrar</button>
+    <div class="toggle" onclick="mostrarRegistro()">Crear cuenta</div>
+  </div>
+
+  <!-- REGISTRO -->
+  <div class="form-box hidden" id="registerBox">
+    <h2>Registro</h2>
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="text" id="apellido" placeholder="Apellido">
+    <input type="text" id="direccion" placeholder="Dirección">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="registrar()">Registrarse</button>
+    <div class="toggle" onclick="mostrarLogin()">Ya tengo cuenta</div>
+  </div>
+
+</div>
+
+<script>
+
+/* CAMBIAR FORM */
+function mostrarRegistro(){
+  loginBox.classList.add("hidden");
+  registerBox.classList.remove("hidden");
+}
+
+function mostrarLogin(){
+  registerBox.classList.add("hidden");
+  loginBox.classList.remove("hidden");
+}
+
+/* REGISTRAR */
+function registrar(){
+
+  const usuario = {
+    nombre: nombre.value,
+    apellido: apellido.value,
+    direccion: direccion.value,
+    email: email.value,
+    password: password.value
+  };
+
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  if(usuarios.find(u => u.email === usuario.email)){
+    alert("Usuario ya existe ❌");
+    return;
+  }
+
+  usuarios.push(usuario);
+
+  localStorage.setItem("usuarios", JSON.stringify(usuarios));
+
+  alert("Registro exitoso ✅");
+
+  mostrarLogin();
+}
+
+/* LOGIN */
+function login(){
+
+  let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  const usuario = usuarios.find(u => 
+    u.email === loginEmail.value && u.password === loginPass.value
+  );
+
+  if(usuario){
+    localStorage.setItem("usuarioActivo", JSON.stringify(usuario));
+    alert("Bienvenido " + usuario.nombre + " ✅");
+
+    window.location.href = "index.html";
+  }else{
+    alert("Datos incorrectos ❌");
+  }
+}
+
+</script>
+
+</body>
+</html>
